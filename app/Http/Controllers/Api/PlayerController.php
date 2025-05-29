@@ -18,6 +18,13 @@ class PlayerController extends Controller
         return response()->json(['message' => 'Players retrieved successfully', 'data' => $players]);
     }
 
+
+    public function count()
+    {
+        // Logic to count all players
+        $count = Player::count();
+        return response()->json(['message' => 'Total players count', 'data' => $count]);
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -50,20 +57,26 @@ class PlayerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Player $player, string $id, Request $request)
-        // Logic to update an existing player
-    {
-        $data = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'telephone' => 'sometimes|required|string|max:255|unique:players,telephone,' . $id,
-            'position' => 'sometimes|required|string|max:255',
-            'age' => 'sometimes|required|integer|min:1|max:120',
-            'major' => 'sometimes|required|string|max:255',
-        ]);
+ public function update(Request $request, $id)
+{
+    $player = Player::findOrFail($id);
 
-        $player->update($data);
-        return response()->json(['message' => 'Player updated successfully', 'data' => $player]);
-    }
+    $data = $request->validate([
+        'name' => 'required|string',
+        'telephone' => 'required|string',
+        'position' => 'required|string',
+        'age' => 'required|integer',
+        'major' => 'required|string',
+    ]);
+
+    $player->update($data);
+
+    return response()->json([
+        'message' => 'Player updated successfully',
+        'data' => $player
+    ]);
+}
+
 
     /**
      * Remove the specified resource from storage.

@@ -11,5 +11,6 @@ class Player extends Model
         'telephone',
         'position',
         'age',
+        'major',
     ];
 }

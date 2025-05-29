@@ -11,9 +11,15 @@ class TeamController extends Controller
     public function index()
     {
         // Logic to retrieve and return all teams
-        Team::all();
+       $teams = Team::all();
 
-        return response()->json(['message' => 'List of all teams']);
+        return response()->json(['message' => 'List of all teams', 'data' => $teams]);
+    }
+
+    public function count() {
+        $dataTeams = Team::count();
+
+        return response()->json(['message' => 'total teams', 'data' => $dataTeams]);
     }
 
     public function show($id)
@@ -32,11 +38,19 @@ class TeamController extends Controller
             'color' => 'string|max:255|unique:teams',
         ]);
 
-        return response()->json(['message' => 'Team created successfully'], 201);
+        $team = Team::create($data);
+
+        return response()->json(['message' => 'Team created successfully', 'data' => $team], 201);
     }
 
-    public function update(Team $team, $id, Request $request)
+    public function update(Request $request, $id)
     {
+        $team = Team::findOrFail($id);
+
+        // Check if the team exists
+        if (!$team) {
+            return response()->json(['message' => 'Team not found'], 404);
+        }
         // Logic to update an existing team
         $data = $request->validate([
             'name' => 'sometimes|required|string|max:255',
