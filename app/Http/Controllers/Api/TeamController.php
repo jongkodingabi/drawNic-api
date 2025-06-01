@@ -27,7 +27,7 @@ class TeamController extends Controller
         // Logic to retrieve and return a specific team
         $team = Team::findOrFail($id);
 
-        return response()->json(['message' => 'Details of team with ID: ' . $id]);
+        return response()->json(['message' => 'Details of team with ID: ' . $team, 'data' => $team]);
     }
 
     public function store(Request $request)

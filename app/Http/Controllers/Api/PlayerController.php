@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Player;
+use App\Models\PlayerTeamDraw;
 use Illuminate\Http\Request;
 
 class PlayerController extends Controller
@@ -24,6 +25,24 @@ class PlayerController extends Controller
         // Logic to count all players
         $count = Player::count();
         return response()->json(['message' => 'Total players count', 'data' => $count]);
+    }
+
+    public function byTeam(Request $request) {
+        $team = $request->query('team');
+
+        if (!$team) {
+            return response()->json([
+                'message' => 'Team is required'
+            ], 400);
+            
+        }
+
+        $players = PlayerTeamDraw::with(['player', 'team'])->where('team_id', $team)->get();
+
+        return response()->json([
+            'message' => 'Players by team retrieved successfully',
+            'data' => $players
+        ]);
     }
     /**
      * Store a newly created resource in storage.

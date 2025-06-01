@@ -13,4 +13,8 @@ class Player extends Model
         'age',
         'major',
     ];
+
+    public function teamDraw() {
+        return $this->hasOne(PlayerTeamDraw::class);
+    }
 }
